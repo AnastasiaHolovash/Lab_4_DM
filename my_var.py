@@ -169,12 +169,14 @@ class Lab4:
             def make_graf(matrix, png, colors):
                 fig = plt.figure()
                 graf = nx.Graph()
-                for i in range(len(matrix)):
+                for i in range(1, len(matrix) + 1):
                     graf.add_node(i)
                 for i in range(len(matrix)):
                     for j in range(len(matrix[1])):
                         if a[i][j] == 1:
-                            graf.add_edge(i, j)
+                            ii = i + 1
+                            jj = j + 1
+                            graf.add_edge(ii, jj)
                 nx.draw(graf, pos=nx.shell_layout(graf))
                 list_color = ['red', 'blue', 'yellow', 'green', 'orange', 'springgreen', 'lime', 'olive', 'indigo',
                               'fuchsia']
@@ -183,7 +185,8 @@ class Lab4:
                     nodlist = []
                     for nod in range(n):
                         if colors[nod] == i:
-                            nodlist.append(nod)
+                            nodd = nod + 1
+                            nodlist.append(nodd)
                     nx.draw(graf, pos=nx.shell_layout(graf), node_color=list_color[i - 1], nodelist=nodlist,
                             with_labels=True)
                 plt.show()
