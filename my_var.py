@@ -2,6 +2,7 @@ from tkinter import *
 import random
 import networkx as nx
 import matplotlib.pylab as pl
+import matplotlib.pyplot as plt
 
 
 class Lab4:
@@ -129,6 +130,67 @@ class Lab4:
             else:
                 self.window2()
 
+        def but_bind_2():
+            n = 9
+            cmax = 10
+            color = [0 for i in range(n)]
+            #     0  1  2  3  4  5  6  7  8
+            a = [[0, 1, 0, 0, 1, 0, 0, 0, 0],  # 0
+                 [1, 0, 1, 0, 1, 1, 0, 0, 0],  # 1
+                 [0, 1, 0, 1, 0, 1, 1, 0, 0],  # 2
+                 [0, 0, 1, 0, 0, 0, 1, 0, 0],  # 3
+                 [1, 1, 0, 0, 0, 1, 0, 1, 0],  # 4
+                 [0, 1, 1, 0, 1, 0, 1, 1, 1],  # 5
+                 [0, 0, 1, 1, 0, 1, 0, 0, 1],  # 6
+                 [0, 0, 0, 0, 1, 1, 0, 0, 0],  # 7
+                 [0, 0, 0, 0, 0, 1, 1, 0, 0]]  # 8
+
+            def visit(i):
+                def nicecolor():
+                    w = {0}
+                    newcol = 0
+                    for j in range(n):
+                        if a[i][j] > 0: w.add(color[j])
+                    for cm in range(1, cmax):
+                        if cm not in w:
+                            newcol = cm
+                            break
+                    return newcol
+                if i == n:
+                    print("FINAL")  # Якщо всі вершини розфарбовані, то виводимо результат
+                else:
+                    if color[i] == 0:  # Якщо поточна вершина не розфарбована
+                        curcol = nicecolor()
+                        if curcol > 0:
+                            color[i] = curcol  # Якщо неконфліктний, то розфарб. вершину i фарбою c
+                            visit(i + 1)  # Рекурсивно викликаємо для наступної вершини
+            visit(0)
+
+            def make_graf(matrix, png, colors):
+                fig = plt.figure()
+                graf = nx.Graph()
+                for i in range(len(matrix)):
+                    graf.add_node(i)
+                for i in range(len(matrix)):
+                    for j in range(len(matrix[1])):
+                        if a[i][j] == 1:
+                            graf.add_edge(i, j)
+                nx.draw(graf, pos=nx.shell_layout(graf))
+                list_color = ['red', 'blue', 'yellow', 'green', 'orange', 'springgreen', 'lime', 'olive', 'indigo',
+                              'fuchsia']
+
+                for i in set(colors):
+                    nodlist = []
+                    for nod in range(n):
+                        if colors[nod] == i:
+                            nodlist.append(nod)
+                    nx.draw(graf, pos=nx.shell_layout(graf), node_color=list_color[i - 1], nodelist=nodlist,
+                            with_labels=True)
+                plt.show()
+                fig.savefig(png)
+
+            make_graf(a, 'file.png', color)
+
         Label(self.root, text='Завдання', font='Arial 16 bold').grid(column=1, row=1)
         Label(self.root, text='Набути теоретичні знання по темі «Розфарбування графів». \n'
                               'Створити програму розфарбування графів \n'
@@ -141,10 +203,10 @@ class Lab4:
         self.e.grid(column=2, row=3, sticky=W)
         Button(self.root, text='Задати матрицю суміжності', font='Arial 12', bg='lightblue', command=but_bind).grid(
             column=3, row=3)
-        Button(self.root, text='Завдання за варіантом', font='Arial 12', bg='lightblue', command=but_bind).grid(
+        Button(self.root, text='Завдання за варіантом', font='Arial 12', bg='lightblue', command=but_bind_2).grid(
             column=3, row=5)
         Button(self.root, text='Студент', font='Arial 12 bold', command=self.student, bg='azure').grid(column=1, row=5)
-        print("E>>>>>", self.e.get())
+        #print("E>>>>>", self.e.get())
 
         self.root.mainloop()
 
